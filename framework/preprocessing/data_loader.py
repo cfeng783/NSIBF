@@ -74,10 +74,19 @@ def get_simulation_data():
     return train_df,test_df,signals
     
 def load_wadi_data():
-    train_df = pd.read_csv('../datasets/WADI/WADI_train.csv')
-    train_df=train_df.fillna(method='ffill')
+    z_tr = zipfile.ZipFile('../datasets/WADI/WADI_train.zip', "r")
+    f_tr = z_tr.open(z_tr.namelist()[0])
+    train_df=pd.read_csv(f_tr)
+    f_tr.close()
+    z_tr.close()
     
-    test_df = pd.read_csv('../datasets/WADI/WADI_test.csv')
+    z_tr = zipfile.ZipFile('../datasets/WADI/WADI_test.zip', "r")
+    f_tr = z_tr.open(z_tr.namelist()[0])
+    test_df=pd.read_csv(f_tr)
+    f_tr.close()
+    z_tr.close()
+    
+    train_df=train_df.fillna(method='ffill')
     test_df.loc[test_df['label']>=1,'label']=1
     test_df=test_df.fillna(method='ffill')
     
@@ -125,8 +134,18 @@ def load_wadi_data():
 
 
 def load_swat_data():
-    train_df = pd.read_csv('../datasets/SWAT/SWaT_train.csv')
-    test_df = pd.read_csv('../datasets/SWAT/SWaT_test.csv')
+    z_tr = zipfile.ZipFile('../datasets/SWAT/SWaT_train.zip', "r")
+    f_tr = z_tr.open(z_tr.namelist()[0])
+    train_df=pd.read_csv(f_tr)
+    f_tr.close()
+    z_tr.close()
+    
+    z_tr = zipfile.ZipFile('../datasets/SWAT/SWaT_test.zip', "r")
+    f_tr = z_tr.open(z_tr.namelist()[0])
+    test_df=pd.read_csv(f_tr)
+    f_tr.close()
+    z_tr.close()
+    
     test_df['label'] = 0
     test_df.loc[test_df['Normal/Attack']!='Normal', 'label'] = 1
     

@@ -28,7 +28,7 @@ val_x = x[pos:,:]
 val_u = u[pos:,:]
 val_y = y[pos:,:]
 
-
+'uncomment to retrain model'
 # kf.train(x_train, y_train, z_dim=2, hnet_hidden_layers=2, 
 #          fnet_hidden_layers=2, fnet_hidden_dim=8, 
 #          uencoding_layers=1, uencoding_dim=4, l2=0.01, 

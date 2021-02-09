@@ -113,5 +113,4 @@ def bf_search(score, label, start, end=None, step_num=1, display_freq=1, verbose
             m = target
         if verbose and i % display_freq == 0:
             print("cur thr: ", threshold, target, m, m_t)
-    print(m, m_t)
     return m, m_t
