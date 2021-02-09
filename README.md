@@ -1,3 +1,10 @@
+# NSIBF
+
+
+
+### Time Series Anomaly Detection for Cyber-physical Systems via Neural System Identification and Bayesian Filtering
+
+
 ## Getting Started
 
 #### Install dependencies (with python 3.6) 
@@ -6,15 +13,30 @@
 pip install -r requirements.txt
 ```
 
-#### Run the code
+#### Run the qualitative experiment
 
 ```shell
 cd experiments
-python main.py
+python qualitative_experiment.py
 ```
 
-If you want to change the default configuration, you can edit `ExpConfig` in `main.py` or overwrite the config in `main.py` using command line args. For example:
+#### Run the PUMP experiment
 
+```shell
+cd experiments
+python PUMP_experiement.py
 ```
-python main.py --dataset='MSL' --max_epoch=20
+
+#### Run the WADI experiment
+
+```shell
+cd experiments
+python WADI_experiement.py
+```
+
+#### Run the SWAT experiment
+
+```shell
+cd experiments
+python SWAT_experiement.py
 ```
