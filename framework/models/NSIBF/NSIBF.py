@@ -10,7 +10,6 @@ from . import nearestPD
 from ...utils import reset_random_seed
 from scipy.spatial.distance import mahalanobis
 from sklearn import metrics
-from _signal import signal
 
 
 class NSIBF(BaseModel,DataExtractor):
@@ -380,12 +379,13 @@ class NSIBF(BaseModel,DataExtractor):
         """
         Score the model based on datasets with uniform negative sampling.
         Better score indicate a higher performance
-        For efficiency, the average performance of recon and pred are used since they are coupled with Bayesian filtering
+        For efficiency, the AUC score of NSIBF-RECON is used for scoring in this version.
+        Since normal samples are minority, we calculate 1-auc_score.
         """
-        recon_scores,pred_scores = self.score_samples_via_residual_error(neg_x[0],neg_x[1])
+        
+        recon_scores,_ = self.score_samples_via_residual_error(neg_x[0],neg_x[1])
         t1 = metrics.roc_auc_score(neg_y, recon_scores)
-        t2 = metrics.roc_auc_score(neg_y[1:], pred_scores)
-        return (t1+t2)/2
+        return 1-t1
     
     @override
     def save_model(self,model_path=None):

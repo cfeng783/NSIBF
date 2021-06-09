@@ -29,10 +29,8 @@ test_df = normalize_and_encode_signals(test_df,signals,scaler='min_max')
 test_x,test_u,_,labels = kf.extract_data(test_df,purpose='AD',freq=seqL,label='label')
 labels = labels.sum(axis=1)
 labels[labels>0]=1
-print(list(labels).count(1),len(labels))
-x_test = [test_x,test_u]
-y_test = labels[1:]
 
+#set retrain to False to reproduce the results in the paper
 retrain_model = False
 if retrain_model:
     x,u,y = [],[],[]
@@ -44,8 +42,6 @@ if retrain_model:
         neg_labels = neg_labels.sum(axis=1)
         neg_labels[neg_labels<seqL]=0
         neg_labels[neg_labels==seqL]=1
-    #     neg_labels = neg_labels[1:]
-        print(list(neg_labels).count(1),len(neg_labels))
         x.append(neg_x)
         u.append(neg_u)
         y.append(neg_labels)
