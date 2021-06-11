@@ -22,13 +22,6 @@ train_x,train_u,train_y,_ = kf.extract_data(train_df)
 x_train = [train_x,train_u]
 y_train = [train_x,train_y]
 
-val_df = normalize_and_encode_signals(val_df,signals,scaler='min_max') 
-val_x,val_u,val_y,_ = kf.extract_data(val_df)
-
-test_df = normalize_and_encode_signals(test_df,signals,scaler='min_max')
-test_x,test_u,_,labels = kf.extract_data(test_df,purpose='AD',freq=seqL,label='label')
-labels = labels.sum(axis=1)
-labels[labels>0]=1
 
 #set retrain to False to reproduce the results in the paper
 retrain_model = False
@@ -67,12 +60,21 @@ if retrain_model:
     hp_list.append(ConstHyperparameter('verbose',2))
     
     optor = HPOptimizers.RandomizedGS(kf, hp_list,x_train, y_train,x_neg,y_neg)
-    kf,optHPCfg,bestScore = optor.run(n_searches=25,verbose=1)
+    kf,optHPCfg,bestScore = optor.run(n_searches=10,verbose=1)
 #     kf.save_model('../results/WADI')
     print('optHPCfg',optHPCfg)
     print('bestScore',bestScore)
 else:
     kf = kf.load_model('../results/WADI')
+
+val_df = normalize_and_encode_signals(val_df,signals,scaler='min_max') 
+val_x,val_u,val_y,_ = kf.extract_data(val_df)
+
+test_df = normalize_and_encode_signals(test_df,signals,scaler='min_max')
+test_x,test_u,_,labels = kf.extract_data(test_df,purpose='AD',freq=seqL,label='label')
+labels = labels.sum(axis=1)
+labels[labels>0]=1
+
 kf.estimate_noise(val_x,val_u,val_y)
 
 z_scores = kf.score_samples(test_x, test_u,reset_hidden_states=True)

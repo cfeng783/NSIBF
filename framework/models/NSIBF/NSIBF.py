@@ -7,9 +7,8 @@ import tempfile
 from scipy.linalg import cholesky
 from ..base import BaseModel,DataExtractor,override
 from . import nearestPD
-from ...utils import reset_random_seed
+from ...utils.metrics import bf_search
 from scipy.spatial.distance import mahalanobis
-from sklearn import metrics
 
 
 class NSIBF(BaseModel,DataExtractor):
@@ -345,7 +344,6 @@ class NSIBF(BaseModel,DataExtractor):
         x_dim, u_dim = x[0].shape[1], x[1].shape[2]
 #         print(x[0].shape,x[1].shape)
         keras.backend.clear_session()
-        reset_random_seed()
         model, g_net, h_net, f_net = self._make_network(x_dim, u_dim, z_dim, 
                                                           hnet_hidden_layers, fnet_hidden_layers, 
                                                           fnet_hidden_dim, uencoding_layers,uencoding_dim,
@@ -379,13 +377,13 @@ class NSIBF(BaseModel,DataExtractor):
         """
         Score the model based on datasets with uniform negative sampling.
         Better score indicate a higher performance
-        For efficiency, the AUC score of NSIBF-RECON is used for scoring in this version.
-        Since normal samples are minority, we calculate 1-auc_score.
+        For efficiency, the best f1 score of NSIBF-PRED is used for scoring in this version.
         """
         
-        recon_scores,_ = self.score_samples_via_residual_error(neg_x[0],neg_x[1])
-        t1 = metrics.roc_auc_score(neg_y, recon_scores)
-        return 1-t1
+        _,pred_scores = self.score_samples_via_residual_error(neg_x[0],neg_x[1])
+        pred_scores = -1*pred_scores
+        t, _ = bf_search(pred_scores, neg_y[1:],start=np.amin(pred_scores),end=np.amax(pred_scores),step_num=1000,verbose=False)
+        return t[0]
     
     @override
     def save_model(self,model_path=None):
