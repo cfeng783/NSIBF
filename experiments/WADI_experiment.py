@@ -53,7 +53,7 @@ if retrain_model:
     hp_list.append(UniformIntegerHyperparameter('uencoding_layers',1,3))
     hp_list.append(UniformIntegerHyperparameter('uencoding_dim',32,256))
     hp_list.append(UniformFloatHyperparameter('l2',0,0.05))
-    hp_list.append(ConstHyperparameter('epochs',100))
+    hp_list.append(ConstHyperparameter('epochs',50))
     hp_list.append(ConstHyperparameter('save_best_only',True))
     hp_list.append(ConstHyperparameter('validation_split',0.1))
     hp_list.append(ConstHyperparameter('batch_size',256*16))

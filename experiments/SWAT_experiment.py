@@ -22,7 +22,7 @@ x_train = [train_x,train_u]
 y_train = [train_x,train_y]
 
 #set retrain to False to reproduce the results in the paper
-retrain_model = True
+retrain_model = False
 if retrain_model:
     x,u,y = [],[],[]
     for i in range(20):
@@ -44,17 +44,17 @@ if retrain_model:
     y_neg = y
     
     hp_list = []
-    hp_list.append(UniformIntegerHyperparameter('z_dim',1,25*3)) 
+    hp_list.append(UniformIntegerHyperparameter('z_dim',1,75)) 
     hp_list.append(UniformIntegerHyperparameter('hnet_hidden_layers',1,3))  
     hp_list.append(UniformIntegerHyperparameter('fnet_hidden_layers',1,3))
     hp_list.append(UniformIntegerHyperparameter('fnet_hidden_dim',32,256))
     hp_list.append(UniformIntegerHyperparameter('uencoding_layers',1,3))
     hp_list.append(UniformIntegerHyperparameter('uencoding_dim',32,256))
     hp_list.append(UniformFloatHyperparameter('l2',0,0.05))
-    hp_list.append(ConstHyperparameter('epochs',100))
+    hp_list.append(ConstHyperparameter('epochs',25))
     hp_list.append(ConstHyperparameter('save_best_only',True))
     hp_list.append(ConstHyperparameter('validation_split',0.1))
-    hp_list.append(ConstHyperparameter('batch_size',256*16))
+    hp_list.append(ConstHyperparameter('batch_size',256*8))
     hp_list.append(ConstHyperparameter('verbose',2))
 
     optor = HPOptimizers.RandomizedGS(kf, hp_list,x_train, y_train,x_neg,y_neg)
